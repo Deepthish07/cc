@@ -1,52 +1,54 @@
+def add(x, y):
+    return x + y
 
+def subtract(x, y):
+    return x - y
 
+def multiply(x, y):
+    return x * y
 
+def divide(x, y):
+    if y == 0:
+        return "Error! Division by zero."
+    return x / y
 
-#TEMP
-from flask import Flask, request, render_template_string
+def calculator():
+    print("Welcome to the Simple Calculator!")
+    
+    while True:
+        print("\nSelect an operation:")
+        print("1. Add")
+        print("2. Subtract")
+        print("3. Multiply")
+        print("4. Divide")
+        print("5. Exit")
 
-app = Flask(_name_)
+        choice = input("Enter your choice (1/2/3/4/5): ")
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    result = None
-    if request.method == 'POST':
-        try:
-            temp = float(request.form.get('temperature'))
-            unit = request.form.get('unit')
+        if choice in ['1', '2', '3', '4']:
+            try:
+                num1 = float(input("Enter first number: "))
+                num2 = float(input("Enter second number: "))
+            except ValueError:
+                print("Invalid input. Please enter numeric values.")
+                continue
 
-            if unit == 'C':
-                result = (temp * 9/5) + 32
-                result = f"{temp}°C is {result:.2f}°F"
-            elif unit == 'F':
-                result = (temp - 32) * 5/9
-                result = f"{temp}°F is {result:.2f}°C"
-        except ValueError:
-            result = "Invalid input. Please enter a valid number."
+            if choice == '1':
+                print(f"{num1} + {num2} = {add(num1, num2)}")
+            elif choice == '2':
+                print(f"{num1} - {num2} = {subtract(num1, num2)}")
+            elif choice == '3':
+                print(f"{num1} * {num2} = {multiply(num1, num2)}")
+            elif choice == '4':
+                result = divide(num1, num2)
+                print(f"{num1} / {num2} = {result}")
+        
+        elif choice == '5':
+            print("Exiting the calculator. Goodbye!")
+            break
 
-    return render_template_string('''
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Temperature Converter</title>
-    </head>
-    <body>
-        <h1>Temperature Converter</h1>
-        <form method="post">
-            <label for="temperature">Temperature:</label>
-            <input type="text" id="temperature" name="temperature" required>
-            <select name="unit">
-                <option value="C">Celsius to Fahrenheit</option>
-                <option value="F">Fahrenheit to Celsius</option>
-            </select>
-            <button type="submit">Convert</button>
-        </form>
-        {% if result %}
-            <h2>Result: {{ result }}</h2>
-        {% endif %}
-    </body>
-    </html>
-    ''', result=result)
+        else:
+            print("Invalid choice. Please select a valid option.")
 
-if _name_ == '_main_':
-    app.run(debug=True)
+# Run the calculator
+calculator()
