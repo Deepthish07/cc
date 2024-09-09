@@ -1,65 +1,31 @@
-from flask import Flask, request, render_template_string
+def calculate_cgpa(grades, credits):
+    total_points = 0
+    total_credits = 0
 
-app = Flask(__name__)
+    for i in range(len(grades)):
+        total_points += grades[i] * credits[i]
+        total_credits += credits[i]
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    result = None
-    if request.method == 'POST':
-        try:
-            grades = request.form.getlist('grade')
-            credits = request.form.getlist('credit')
+    cgpa = total_points / total_credits
+    return cgpa
 
-            total_points = 0
-            total_credits = 0
+def cgpa_calculator():
+    print("Welcome to the CGPA Calculator!")
+    
+    num_subjects = int(input("Enter the number of subjects: "))
 
-            for grade, credit in zip(grades, credits):
-                grade = float(grade)
-                credit = float(credit)
-                total_points += grade * credit
-                total_credits += credit
+    grades = []
+    credits = []
 
-            cgpa = total_points / total_credits
-            result = f"Your CGPA is {cgpa:.2f}"
-        except ValueError:
-            result = "Invalid input. Please enter valid numbers."
-
-    return render_template_string('''
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>CGPA Calculator</title>
-    </head>
-    <body>
-        <h1>CGPA Calculator</h1>
-        <form method="post">
-            <div id="subjects">
-                <div class="subject">
-                    <label for="grade">Grade:</label>
-                    <input type="text" name="grade" required>
-                    <label for="credit">Credits:</label>
-                    <input type="text" name="credit" required>
-                </div>
-            </div>
-            <button type="button" onclick="addSubject()">Add Another Subject</button><br><br>
-            <button type="submit">Calculate CGPA</button>
-        </form>
-        <br>
-        {% if result %}
-            <h2>Result: {{ result }}</h2>
-        {% endif %}
+    for i in range(num_subjects):
+        grade = float(input(f"Enter your grade for subject {i+1} (0.0 - 10.0): "))
+        credit = float(input(f"Enter the credits for subject {i+1}: "))
         
-        <script>
-            function addSubject() {
-                var div = document.createElement('div');
-                div.className = 'subject';
-                div.innerHTML = '<label for="grade">Grade:</label><input type="text" name="grade" required> <label for="credit">Credits:</label><input type="text" name="credit" required>';
-                document.getElementById('subjects').appendChild(div);
-            }
-        </script>
-    </body>
-    </html>
-    ''', result=result)
+        grades.append(grade)
+        credits.append(credit)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+    cgpa = calculate_cgpa(grades, credits)
+    print(f"\nYour CGPA is: {cgpa:.2f}")
+
+# Run the CGPA calculator
+cgpa_calculator()
