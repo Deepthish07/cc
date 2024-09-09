@@ -1,47 +1,42 @@
-from flask import Flask, request, render_template_string
+def celsius_to_fahrenheit(celsius):
+    return (celsius * 9/5) + 32
 
-app = Flask(__name__)
+def fahrenheit_to_celsius(fahrenheit):
+    return (fahrenheit - 32) * 5/9
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    result = None
-    if request.method == 'POST':
-        try:
-            temp = float(request.form.get('temperature'))
-            unit = request.form.get('unit')
+def temperature_converter():
+    print("Welcome to the Temperature Converter!")
+    
+    while True:
+        print("\nSelect the conversion you want to perform:")
+        print("1. Celsius to Fahrenheit")
+        print("2. Fahrenheit to Celsius")
+        print("3. Exit")
 
-            if unit == 'C':
-                result = (temp * 9/5) + 32
-                result = f"{temp}°C is {result:.2f}°F"
-            elif unit == 'F':
-                result = (temp - 32) * 5/9
-                result = f"{temp}°F is {result:.2f}°C"
-        except ValueError:
-            result = "Invalid input. Please enter a valid number."
+        choice = input("Enter your choice (1/2/3): ")
 
-    return render_template_string('''
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Temperature Converter</title>
-    </head>
-    <body>
-        <h1>Temperature Converter</h1>
-        <form method="post">
-            <label for="temperature">Temperature:</label>
-            <input type="text" id="temperature" name="temperature" required>
-            <select name="unit">
-                <option value="C">Celsius to Fahrenheit</option>
-                <option value="F">Fahrenheit to Celsius</option>
-            </select>
-            <button type="submit">Convert</button>
-        </form>
-        {% if result %}
-            <h2>Result: {{ result }}</h2>
-        {% endif %}
-    </body>
-    </html>
-    ''', result=result)
+        if choice == '1':
+            try:
+                celsius = float(input("Enter temperature in Celsius: "))
+                fahrenheit = celsius_to_fahrenheit(celsius)
+                print(f"{celsius}°C is equal to {fahrenheit:.2f}°F.")
+            except ValueError:
+                print("Invalid input. Please enter a numeric value.")
+        
+        elif choice == '2':
+            try:
+                fahrenheit = float(input("Enter temperature in Fahrenheit: "))
+                celsius = fahrenheit_to_celsius(fahrenheit)
+                print(f"{fahrenheit}°F is equal to {celsius:.2f}°C.")
+            except ValueError:
+                print("Invalid input. Please enter a numeric value.")
 
-if __name__ == '__main__':
-    app.run(debug=True)
+        elif choice == '3':
+            print("Exiting the program. Goodbye!")
+            break
+        
+        else:
+            print("Invalid choice. Please select a valid option.")
+
+# Run the converter
+temperature_converter()
